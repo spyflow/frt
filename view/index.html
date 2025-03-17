@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Detalles de películas y series en Makatunga Movies">
+    <meta name="author" content="Makatunga">
+    <meta name="robots" content="index, follow">
+    <link rel="stylesheet" href="/css/modern.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Detalles - Makatunga Movies</title>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="/index.html">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-r82RYr0438LLRuTmrb1jrosj9144q9.png" alt="Makatunga Movies Logo">
+                </a>
+                <span class="logo-text">Movies</span>
+            </div>
+            
+            <div class="header-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i id="theme-icon" class="fas fa-sun"></i>
+                </button>
+            </div>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input id="searchInput" type="text" placeholder="Buscar películas y series...">
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div id="loadingMessage" class="spinner-container">
+                <div class="spinner"></div>
+                <p>Cargando información...</p>
+            </div>
+            
+            <div id="anime-info"></div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-r82RYr0438LLRuTmrb1jrosj9144q9.png" alt="Makatunga Movies Logo">
+            </div>
+            
+            <div class="footer-links">
+                <a href="/dmca/" target="_blank">DMCA</a>
+                <a href="/terms/" target="_blank">Términos de Servicio</a>
+                <a href="/about/" target="_blank">Acerca de</a>
+                <a href="/privacy/" target="_blank">Política de Privacidad</a>
+            </div>
+            
+            <p class="footer-copyright">
+                Makatunga LLC ©2023-2025. Todos los derechos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <script src="/js/theme.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Configurar el evento de tecla Enter en el campo de búsqueda
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    location.href = '/search/?q=' + this.value;
+                }
+            });
+
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const type = params.get('type') || '';
+
+            if (id) {
+                fetch(`https://api-peliculas.spyflow.link/api/peliculas/info/?title=${id}&type=${type}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const animeInfo = document.getElementById('anime-info');
+                        const loadingMessage = document.getElementById('loadingMessage');
+
+                        if (data.error) {
+                            loadingMessage.innerHTML = `
+                                <div class="error-container">
+                                    <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: var(--error); margin-bottom: 20px;"></i>
+                                    <h2>${data.error}</h2>
+                                    <a href="/index.html" class="watch-button">Volver al inicio</a>
+                                </div>
+                            `;
+                            return;
+                        }
+
+                        loadingMessage.style.display = 'none';
+                        
+                        // Actualizar el título de la página
+                        document.title = `${data.titulo} - Makatunga Movies`;
+
+                        // Formatear el tipo para mostrar
+                        const typeFormatted = type === 'pelicula' ? 'Película' : 'Serie';
+                        const placeholderUrl = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder.jpg-iKUIzEUduG79PRGLsJtES2nV9ogeLV.png";
+
+                        let html = `
+                        <div class="media-details">
+                            <div class="media-poster-large">
+                                <img src="${data.poster}" alt="${data.titulo}" loading="lazy" onerror="this.src='${placeholderUrl}'; this.classList.add('error');">
+                            </div>
+                            <div class="media-info-large">
+                                <h1 class="media-title-large">${data.titulo}</h1>
+                                <div class="media-meta-large">
+                                    <span class="meta-item"><i class="fas fa-calendar-alt"></i> ${data.anio}</span>
+                                    <span class="meta-item"><i class="fas fa-film"></i> ${typeFormatted}</span>
+                                </div>
+                                
+                                <div class="media-synopsis">
+                                    <h2><i class="fas fa-info-circle"></i> Sinopsis</h2>
+                                    <p>${data.sinopsis}</p>
+                                </div>`;
+
+                        if (type === 'serie' && data.total_temporadas > 0) {
+                            html += `
+                                <div class="seasons-container">
+                                    <h2><i class="fas fa-list"></i> Temporadas</h2>
+                                    <ul class="seasons-list">`;
+                            data.temporadas.forEach(temporada => {
+                                html += `
+                                    <li class="season-item">
+                                        <button class="season-button" onclick="mostrarCapitulos(${temporada.temporada}, ${temporada.capitulos}, '${id}', '${type}')">
+                                            <i class="fas fa-play-circle"></i> Temporada ${temporada.temporada} (${temporada.capitulos} capítulos)
+                                        </button>
+                                    </li>`;
+                            });
+                            html += `
+                                    </ul>
+                                    <div id="capitulos-container"></div>
+                                </div>`;
+                        } else if (type === 'pelicula') {
+                            html += `<a href="/watch/?id=${id}&type=${type}" class="watch-button"><i class="fas fa-play"></i> Ver Película</a>`;
+                        } else {
+                            html += '<p>No hay temporadas disponibles.</p>';
+                        }
+
+                        html += `</div></div>`;
+                        animeInfo.innerHTML = html;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                        document.getElementById('loadingMessage').innerHTML = `
+                            <div class="error-container">
+                                <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: var(--error); margin-bottom: 20px;"></i>
+                                <h2>Error al cargar los detalles</h2>
+                                <p>Ha ocurrido un problema al obtener la información. Por favor, inténtalo de nuevo más tarde.</p>
+                                <a href="/index.html" class="watch-button">Volver al inicio</a>
+                            </div>
+                        `;
+                    });
+            } else {
+                document.getElementById('loadingMessage').innerHTML = `
+                    <div class="error-container">
+                        <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: var(--error); margin-bottom: 20px;"></i>
+                        <h2>No se ha proporcionado el parámetro 'id'</h2>
+                        <p>No se puede mostrar la información sin un identificador válido.</p>
+                        <a href="/index.html" class="watch-button">Volver al inicio</a>
+                    </div>
+                `;
+            }
+        });
+
+        function mostrarCapitulos(temporada, numCapitulos, id, type) {
+            const capitulosContainer = document.getElementById('capitulos-container');
+            let html = `
+                <div class="episodes-container">
+                    <h2><i class="fas fa-list-ol"></i> Capítulos de la Temporada ${temporada}</h2>
+                    <div class="episodes-grid">`;
+            for (let capitulo = 1; capitulo <= numCapitulos; capitulo++) {
+                html += `
+                    <div class="episode-item">
+                        <a href="/watch/?id=${id}&season=${temporada}&cap=${capitulo}&type=${type}" class="episode-link">
+                            <div class="episode-number">${capitulo}</div>
+                            <div>Ver capítulo</div>
+                        </a>
+                    </div>`;
+            }
+            html += `</div></div>`;
+            capitulosContainer.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
+

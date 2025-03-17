@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redireccionar Manualmente</title>
+</head>
+<body>
+    <h1>Redireccionar</h1>
+    <p>Haz clic para abrir.</p>
+    <script>
+        // Obtener el valor del parámetro 'url'
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Agregar dinámicamente el enlace
+        const targetUrl = getQueryParam('url');
+        if (targetUrl && /^(https?:\/\/)/.test(targetUrl)) {
+            const link = document.createElement('a');
+            link.href = targetUrl;
+            link.textContent = "Ir a la URL";
+            link.rel = "noreferrer noopener";
+            link.target = "_blank";
+            link.style.padding = "10px 20px";
+            link.style.background = "#007BFF";
+            link.style.color = "white";
+            link.style.textDecoration = "none";
+            link.style.borderRadius = "5px";
+            link.style.display = "inline-block";
+            document.body.appendChild(link);
+        } else {
+            document.body.innerHTML += "<p>La URL proporcionada no es válida.</p>";
+        }
+    </script>
+</body>
+</html>
+

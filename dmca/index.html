@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Política DMCA de Makatunga Movies">
+    <meta name="author" content="Makatunga">
+    <meta name="robots" content="index, follow">
+    <link rel="stylesheet" href="/css/modern.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>DMCA - Makatunga Movies</title>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="/index.html">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-r82RYr0438LLRuTmrb1jrosj9144q9.png" alt="Makatunga Movies Logo">
+                </a>
+                <span class="logo-text">Movies</span>
+            </div>
+            
+            <div class="header-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i id="theme-icon" class="fas fa-sun"></i>
+                </button>
+            </div>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input id="searchInput" type="text" placeholder="Buscar películas y series...">
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="dmca-container">
+            <h1 class="dmca-title">DMCA</h1>
+            
+            <div class="dmca-content">
+                <p>
+                    <strong>INFORMACIÓN IMPORTANTE:</strong> Todos los enlaces disponibles en <strong>makatunga.uy</strong> provienen exclusivamente de <strong>https://www18.pelisplushd.to</strong>. Nuestro sitio web únicamente ofrece una interfaz de usuario mejorada y sin anuncios para acceder a este contenido. No alojamos, creamos ni modificamos ninguno de los enlaces o contenidos a los que se accede a través de nuestro servicio.
+                </p>
+                <p>
+                    Por lo tanto, si se requiere eliminar algún enlace o contenido de nuestra página por motivos de derechos de autor, deberán informarlo y dirigir su solicitud directamente a <strong>https://www18.pelisplushd.to</strong>, que es la fuente original que almacena dichos enlaces, y no a nosotros. Una vez que el contenido sea removido de la fuente original, automáticamente dejará de estar disponible a través de nuestro servicio.
+                </p>
+                <p>
+                    <strong>Anuncios en iframes:</strong> Es importante destacar que <strong>no podemos controlar los anuncios que aparecen en los iframes</strong> de los reproductores de video. Aunque nuestra interfaz está diseñada para ser libre de anuncios propios, los reproductores de video incrustados pueden mostrar publicidad que está fuera de nuestro control. Estos anuncios son gestionados por los proveedores de contenido originales y sus socios publicitarios.
+                </p>
+                <p>
+                    El sitio web <strong>makatunga.uy</strong> proporciona enlaces a reproductores de video de terceros que alojan contenido fuera de nuestro dominio. No tenemos control sobre el contenido ofrecido por estos sitios externos, ni sobre su disponibilidad, calidad, exactitud, o cumplimiento con las leyes de derechos de autor.
+                </p>
+                <p>
+                    Los videos a los que se accede a través de estos enlaces no están alojados en nuestros servidores ni son de nuestra propiedad. Simplemente facilitamos el acceso a este contenido al proporcionar los enlaces, y no somos responsables por cualquier material que pueda infringir los derechos de autor o por el uso que se haga de dicho material.
+                </p>
+                <p>
+                    Si usted es titular de derechos de autor y considera que algún enlace publicado en nuestro sitio infringe sus derechos, puede ponerse en contacto con nosotros. Atenderemos su solicitud y, si corresponde, eliminaremos el enlace que conduce al contenido supuestamente infractor en la mayor brevedad posible.
+                </p>
+                <p>
+                    Además, es responsabilidad del usuario investigar y asegurarse de que el uso de nuestro servicio es legal en su país. No asumimos ninguna responsabilidad por el uso de nuestro servicio en jurisdicciones donde el acceso a contenido a través de terceros pueda estar restringido o prohibido por la ley.
+                </p>
+                <p>
+                    El uso de nuestro sitio está bajo su propia responsabilidad, y no asumimos ninguna responsabilidad legal por el uso indebido de los enlaces proporcionados. Le recomendamos que consulte las políticas de los sitios de terceros antes de reproducir cualquier contenido.
+                </p>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-r82RYr0438LLRuTmrb1jrosj9144q9.png" alt="Makatunga Movies Logo">
+            </div>
+            
+            <div class="footer-links">
+                <a href="/dmca/" target="_blank">DMCA</a>
+                <a href="/terms/" target="_blank">Términos de Servicio</a>
+                <a href="/about/" target="_blank">Acerca de</a>
+                <a href="/privacy/" target="_blank">Política de Privacidad</a>
+            </div>
+            
+            <p class="footer-copyright">
+                Makatunga LLC ©2023-2025. Todos los derechos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <script src="/js/theme.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Configurar el evento de tecla Enter en el campo de búsqueda
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    location.href = '/search/?q=' + this.value;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

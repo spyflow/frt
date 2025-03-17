@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ver películas y series online en Makatunga Movies">
+    <meta name="author" content="Makatunga">
+    <meta name="robots" content="index, follow">
+    <link rel="stylesheet" href="/css/modern.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Ver - Makatunga Movies</title>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="/index.html">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-r82RYr0438LLRuTmrb1jrosj9144q9.png" alt="Makatunga Movies Logo">
+                </a>
+                <span class="logo-text">Movies</span>
+            </div>
+            
+            <div class="header-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i id="theme-icon" class="fas fa-sun"></i>
+                </button>
+            </div>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input id="searchInput" type="text" placeholder="Buscar películas y series...">
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="player-container">
+            <h1 id="animeTitle" class="video-title">Cargando...</h1>
+            
+            <div id="iframeContainer" class="video-wrapper">
+                <iframe id="videoPlayer" allowfullscreen onload="hideLoader()"></iframe>
+                <div id="iframeLoader" class="video-loader">
+                    <div class="spinner"></div>
+                    <p>Cargando video...</p>
+                </div>
+            </div>
+            
+            <div class="servers-container">
+                <h2 class="servers-title"><i class="fas fa-server"></i> Servidores disponibles</h2>
+                <div id="serverButtons" class="servers-grid"></div>
+            </div>
+            
+            <div id="navigationButtons" class="navigation-buttons" style="display: none;">
+                <button id="prevButton" class="nav-button" disabled><i class="fas fa-step-backward"></i> Capítulo Anterior</button>
+                <button id="viewAllButton" class="nav-button primary-button"><i class="fas fa-list"></i> Ver Todos los Capítulos</button>
+                <button id="nextButton" class="nav-button" disabled>Capítulo Siguiente <i class="fas fa-step-forward"></i></button>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-r82RYr0438LLRuTmrb1jrosj9144q9.png" alt="Makatunga Movies Logo">
+            </div>
+            
+            <div class="footer-links">
+                <a href="/dmca/" target="_blank">DMCA</a>
+                <a href="/terms/" target="_blank">Términos de Servicio</a>
+                <a href="/about/" target="_blank">Acerca de</a>
+                <a href="/privacy/" target="_blank">Política de Privacidad</a>
+            </div>
+            
+            <p class="footer-copyright">
+                Makatunga LLC ©2023-2025. Todos los derechos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <script src="/js/theme.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Configurar el evento de tecla Enter en el campo de búsqueda
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    location.href = '/search/?q=' + this.value;
+                }
+            });
+
+            const queryParams = new URLSearchParams(window.location.search);
+            const id = queryParams.get('id');
+            const cap = parseInt(queryParams.get('cap')) || 1;
+            const season = parseInt(queryParams.get('season')) || 1;
+            const type = queryParams.get('type');
+            const urlParam = queryParams.get('url');
+
+            const defaultApiUrl = 'https://api-peliculas.spyflow.link';
+            const apiUrl = urlParam ? new URL(urlParam) : new URL(defaultApiUrl);
+
+            if (id && type) {
+                let apiEndpoint = '';
+
+                if (type === 'serie') {
+                    apiEndpoint = `${apiUrl.origin}/api/peliculas/servidor/?title=${id}&type=serie&t=${season}&c=${cap}`;
+                } else if (type === 'pelicula') {
+                    apiEndpoint = `${apiUrl.origin}/api/peliculas/servidor/?title=${id}&type=pelicula`;
+                    // Ocultar los botones de navegación para películas
+                    document.getElementById('navigationButtons').style.display = 'none';
+                }
+
+                fetch(apiEndpoint, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let episodeData = data['espanol_latino'] || data;
+
+                    if (Object.keys(episodeData).length > 0) {
+                        const fullTitle = type === 'serie' ? 
+                            `${id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} - Temporada ${season} - Capítulo ${cap}` :
+                            `${id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}`;
+                        document.getElementById('animeTitle').textContent = fullTitle;
+                        document.title = `${fullTitle} - Makatunga Movies`;
+
+                        createServerButtons(episodeData, apiUrl.origin);
+
+                        const firstServer = Object.values(episodeData)[0][0];
+                        if (firstServer) {
+                            changeServer(firstServer, 0);
+                        }
+
+                        if (type === 'serie') {
+                            document.getElementById('navigationButtons').style.display = 'flex';
+                            setupNavigationButtons(id, season, cap);
+                        }
+                    } else {
+                        showError('Error al obtener los datos del episodio o el episodio no existe.');
+                    }
+                })
+                .catch(() => {
+                    showError('Error al realizar la solicitud a la API.');
+                });
+            } else {
+                showError('Faltan parámetros en la URL.');
+            }
+        });
+
+        function createServerButtons(servers, apiDomain) {
+            const serverButtons = document.getElementById('serverButtons');
+            const serverEntries = Object.entries(servers);
+            
+            serverButtons.innerHTML = '';
+            
+            serverEntries.forEach(([serverName, urls], index) => {
+                if (urls.length > 0) {
+                    const button = document.createElement('button');
+                    button.className = 'server-button';
+                    button.setAttribute('data-index', index);
+                    
+                    // Obtener el dominio del servidor
+                    const serverDomain = new URL(urls[0]).hostname;
+                    
+                    // Determinar el icono basado en el dominio
+                    let icon = 'fas fa-server';
+                    if (serverDomain.includes('fembed')) icon = 'fas fa-play-circle';
+                    else if (serverDomain.includes('streamtape')) icon = 'fas fa-film';
+                    else if (serverDomain.includes('dood')) icon = 'fas fa-video';
+                    
+                    button.innerHTML = `<i class="${icon}"></i> ${serverDomain}`;
+                    button.onclick = () => {
+                        document.querySelectorAll('.server-button').forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        changeServer(urls[0], index);
+                    };
+                    
+                    serverButtons.appendChild(button);
+                }
+            });
+            
+            // Activar el primer botón
+            if (serverButtons.firstChild) {
+                serverButtons.firstChild.classList.add('active');
+            }
+        }
+
+        function changeServer(embedUrl, index) {
+            document.getElementById('iframeLoader').style.display = 'flex';
+            document.getElementById('videoPlayer').src = embedUrl;
+        }
+
+        function hideLoader() {
+            document.getElementById('iframeLoader').style.display = 'none';
+        }
+
+        function setupNavigationButtons(id, season, cap) {
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+            const viewAllButton = document.getElementById('viewAllButton');
+
+            viewAllButton.onclick = () => window.location.href = `/view/?id=${id}&type=serie`;
+
+            fetch(`https://api-peliculas.spyflow.link/api/peliculas/info/?title=${id}&type=serie`)
+            .then(response => response.json())
+            .then(data => {
+                const currentSeason = data.temporadas.find(t => t.temporada === season);
+                if (currentSeason) {
+                    const totalChapters = currentSeason.capitulos;
+
+                    // Botón capítulo anterior
+                    if (cap > 1) {
+                        prevButton.disabled = false;
+                        prevButton.onclick = () => changeChapter(id, season, cap - 1);
+                    } else {
+                        prevButton.disabled = true;
+                    }
+
+                    // Botón capítulo siguiente
+                    if (cap < totalChapters) {
+                        nextButton.disabled = false;
+                        nextButton.onclick = () => changeChapter(id, season, cap + 1);
+                    } else {
+                        nextButton.disabled = true;
+                    }
+                }
+            });
+        }
+
+        function changeChapter(id, season, cap) {
+            window.location.href = `/watch/?id=${id}&season=${season}&cap=${cap}&type=serie`;
+        }
+
+        function showError(message) {
+            document.getElementById('animeTitle').innerHTML = `<div class="error"><i class="fas fa-exclamation-circle"></i> ${message}</div>`;
+            document.getElementById('iframeContainer').style.display = 'none';
+            document.querySelector('.servers-container').style.display = 'none';
+            document.getElementById('navigationButtons').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
+

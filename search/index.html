@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Busca tus películas y series favoritas en Makatunga Movies">
+    <meta name="author" content="Makatunga">
+    <meta name="robots" content="index, follow">
+    <link rel="stylesheet" href="/css/modern.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Buscar - Makatunga Movies</title>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="/index.html">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-r82RYr0438LLRuTmrb1jrosj9144q9.png" alt="Makatunga Movies Logo">
+                </a>
+                <span class="logo-text">Movies</span>
+            </div>
+            
+            <div class="header-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i id="theme-icon" class="fas fa-sun"></i>
+                </button>
+            </div>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input id="searchInput" type="text" placeholder="Buscar películas y series...">
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-search"></i> Resultados de búsqueda</h2>
+            
+            <div id="loadingMessage" class="spinner-container">
+                <div class="spinner"></div>
+                <p>Buscando resultados...</p>
+            </div>
+            
+            <div id="searchResults" class="content-grid"></div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-r82RYr0438LLRuTmrb1jrosj9144q9.png" alt="Makatunga Movies Logo">
+            </div>
+            
+            <div class="footer-links">
+                <a href="/dmca/" target="_blank">DMCA</a>
+                <a href="/terms/" target="_blank">Términos de Servicio</a>
+                <a href="/about/" target="_blank">Acerca de</a>
+                <a href="/privacy/" target="_blank">Política de Privacidad</a>
+            </div>
+            
+            <p class="footer-copyright">
+                Makatunga LLC ©2023-2025. Todos los derechos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <script src="/js/theme.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Configurar el evento de tecla Enter en el campo de búsqueda
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    location.href = '/search/?q=' + this.value;
+                }
+            });
+
+            const queryParams = new URLSearchParams(window.location.search);
+            const query = queryParams.get('q');
+            
+            // Establecer el valor de búsqueda en el input
+            if (query) {
+                document.getElementById('searchInput').value = query;
+                document.title = `Búsqueda: ${query} - Makatunga Movies`;
+            }
+            
+            if (query) {
+                const searchQuery = encodeURIComponent(query.toLowerCase().trim());
+
+                fetch(`https://api-peliculas.spyflow.link/api/peliculas/buscar/?q=${searchQuery}`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const loadingMessage = document.getElementById('loadingMessage');
+                    const searchResults = document.getElementById('searchResults');
+
+                    if (data.movies.length > 0 || data.series.length > 0) {
+                        loadingMessage.style.display = 'none';
+
+                        const createResultItem = (item, type, index) => {
+                            const typeLabel = type === 'pelicula' ? 'Película' : 'Serie';
+                            const delay = index % 3;
+                            const placeholderUrl = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder.jpg-iKUIzEUduG79PRGLsJtES2nV9ogeLV.png";
+                            
+                            return `
+                                <div class="media-card fade-in delay-${delay}">
+                                    <div class="media-poster">
+                                        <img src="${item.poster}" alt="${item.title}" loading="lazy" onerror="this.src='${placeholderUrl}'; this.classList.add('error');">
+                                    </div>
+                                    <div class="media-info">
+                                        <h3 class="media-title">${item.title}</h3>
+                                        <div class="media-meta">
+                                            <span class="media-type">${typeLabel}</span>
+                                            <span class="media-year">${item.year || 'N/A'}</span>
+                                        </div>
+                                        <a href="/view/?id=${item['soft-name']}&type=${type}" class="media-link">Ver detalles</a>
+                                    </div>
+                                </div>
+                            `;
+                        };
+
+                        // Combinar películas y series
+                        const allMedia = [
+                            ...data.movies.map((movie, index) => createResultItem(movie, 'pelicula', index)),
+                            ...data.series.map((series, index) => createResultItem(series, 'serie', index + data.movies.length))
+                        ];
+                        
+                        searchResults.innerHTML = allMedia.join('');
+                    } else {
+                        loadingMessage.innerHTML = `
+                            <div class="error-container">
+                                <i class="fas fa-search" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;"></i>
+                                <h2>No se encontraron resultados para "${query}"</h2>
+                                <p>Intenta con otra búsqueda o explora nuestro catálogo.</p>
+                                <a href="/index.html" class="watch-button">Ver catálogo</a>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('loadingMessage').innerHTML = `
+                        <div class="error-container">
+                            <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: var(--error); margin-bottom: 20px;"></i>
+                            <h2>Error al realizar la solicitud</h2>
+                            <p>Ha ocurrido un problema al procesar tu búsqueda. Por favor, inténtalo de nuevo más tarde.</p>
+                            <a href="/index.html" class="watch-button">Volver al inicio</a>
+                        </div>
+                    `;
+                });
+            } else {
+                document.getElementById('loadingMessage').innerHTML = `
+                    <div class="error-container">
+                        <i class="fas fa-search" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;"></i>
+                        <h2>No se ha proporcionado un término de búsqueda</h2>
+                        <p>Utiliza la barra de búsqueda para encontrar tus películas y series favoritas.</p>
+                        <a href="/index.html" class="watch-button">Ver catálogo</a>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,481 @@
+/* Reset básico para márgenes, paddings y bordes */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Variables de color */
+:root {
+  --background: #f4f4f4;
+  --foreground: #333;
+  --primary: #007bff;
+  --primary-hover: #0056b3;
+  --secondary: #6c757d;
+  --border: #ddd;
+  --card-bg: #fff;
+  --header-bg: #f8f8f8;
+  --footer-bg: #f8f8f8;
+  --error: #e74c3c;
+  --success: #2ecc71;
+  --spinner: #3498db;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo general del cuerpo */
+body {
+  font-family: "Poppins", Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--foreground);
+  background-color: var(--background);
+  padding: 0;
+  margin: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Contenedor principal para centrar el contenido */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 0 10px var(--shadow);
+}
+
+/* Encabezado principal */
+h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+  color: var(--foreground);
+}
+
+/* Estilo para subtítulos */
+h2 {
+  font-size: 1.5em;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: var(--foreground);
+}
+
+/* Estilo de párrafos */
+p {
+  margin-bottom: 15px;
+}
+
+/* Imágenes responsivas */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Lista no ordenada */
+ul {
+  list-style-type: none;
+}
+
+/* Elementos de lista */
+li {
+  margin-bottom: 10px;
+}
+
+/* Botones */
+button {
+  background-color: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--shadow);
+}
+
+/* Enlaces */
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Estilo para el iframe */
+iframe {
+  border: none;
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px var(--shadow);
+}
+
+/* Estilo para tablas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th,
+td {
+  padding: 12px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+th {
+  background-color: var(--header-bg);
+}
+
+/* Mensajes de error o advertencia */
+.error {
+  color: var(--error);
+  font-weight: bold;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: rgba(231, 76, 60, 0.1);
+}
+
+/* Mensajes de éxito */
+.success {
+  color: var(--success);
+  font-weight: bold;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: rgba(46, 204, 113, 0.1);
+}
+
+/* Estilos para el iframe */
+iframe {
+  width: 100%;
+  height: 500px;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px var(--shadow);
+}
+
+/* Contenedor de controles */
+#controls {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Botones de servidores */
+#serverButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+#serverButtons button {
+  background-color: var(--card-bg);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+#serverButtons button:hover {
+  background-color: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--shadow);
+}
+
+/* Botones de navegación */
+#navigationButtons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+#navigationButtons button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+#navigationButtons button:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--shadow);
+}
+
+#navigationButtons button:disabled {
+  background-color: var(--secondary);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+footer {
+  width: 100%;
+  padding: 20px 0;
+  text-align: center;
+  margin-top: 40px;
+  background-color: var(--footer-bg);
+  border-top: 1px solid var(--border);
+}
+
+/* Estilos para resultados de búsqueda */
+#searchResults {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.resultItem {
+  width: 260px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--card-bg);
+  box-shadow: 0 4px 8px var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+}
+
+.resultItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px var(--shadow);
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 370px;
+  overflow: hidden;
+  background-color: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.resultItem:hover .image-container img {
+  transform: scale(1.05);
+}
+
+.resultItem h3 {
+  padding: 15px 15px 5px;
+  font-size: 1.2rem;
+  color: var(--foreground);
+}
+
+.resultItem p {
+  padding: 0 15px 15px;
+}
+
+.resultItem a {
+  display: inline-block;
+  background-color: var(--primary);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.resultItem a:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px var(--shadow);
+  text-decoration: none;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilos para el header moderno */
+.modern-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px;
+  background-color: var(--header-bg);
+  box-shadow: 0 2px 10px var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo-container img {
+  height: 50px;
+  margin: 0;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  max-width: 500px;
+  margin: 0 20px;
+  position: relative;
+}
+
+.search-container input {
+  width: 100%;
+  padding: 10px 15px 10px 40px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background-color: var(--card-bg);
+  color: var(--foreground);
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.search-container input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+.search-container i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--secondary);
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  color: var(--foreground);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background-color: rgba(128, 128, 128, 0.2);
+}
+
+/* Estilos para el footer moderno */
+.modern-footer {
+  background-color: var(--footer-bg);
+  padding: 30px 20px;
+  text-align: center;
+  margin-top: 40px;
+  border-top: 1px solid var(--border);
+}
+
+.modern-footer p {
+  margin-bottom: 10px;
+  color: var(--foreground);
+}
+
+.modern-footer a {
+  color: var(--primary);
+  margin: 0 10px;
+  transition: color 0.3s ease;
+}
+
+.modern-footer a:hover {
+  color: var(--primary-hover);
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 768px) {
+  .modern-header {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .logo-container {
+    margin-bottom: 10px;
+  }
+
+  .search-container {
+    width: 100%;
+    max-width: none;
+    margin: 10px 0;
+  }
+
+  #searchResults {
+    padding: 10px;
+  }
+
+  .resultItem {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  #serverButtons {
+    flex-direction: column;
+  }
+
+  #navigationButtons {
+    flex-direction: column;
+  }
+}
+
+/* Estilos para el spinner de carga */
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid var(--spinner);
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Estilos para el loader del iframe */
+#iframeLoader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--card-bg);
+  color: var(--foreground);
+}
+
